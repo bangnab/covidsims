@@ -49,7 +49,7 @@ infected_chart = ChartModule([{"Label": "infected", "Color": "Black"}, {"Label":
 model_params = {
     "height": 20,
     "width": 20,
-    "density": UserSettableParameter("slider", "Initial infection density", 0.01, 0.00, 1.0, 0.11),
+    "density": UserSettableParameter("slider", "Initial infection density", 0.01, 0.00, 1.0, 0.01),
     "infection_rate": UserSettableParameter("slider", "Infection rate", 0.1, 0.00, 1.0, 0.05),
     "healing_rate": UserSettableParameter("slider", "Healing rate", 0.05, 0.00, 1.0, 0.01),
     "immunization_time": UserSettableParameter("slider", "Immunization time", 100, 1, 1000, 1)
