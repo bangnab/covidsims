@@ -44,7 +44,7 @@ class CovidAgent(Agent):
             self.model.immune += 1
 
         # If too many infected neighbors, gets infected
-        if not self.immune and infected_neighbors * self.model.infection_rate > self.model.random.random():
+        if not self.immune and not self.infected and infected_neighbors * self.model.infection_rate > self.model.random.random():
             self.infected = True
             self.model.infected += 1
             self.infection_time = self.model.time
@@ -55,7 +55,7 @@ class CovidSimple(Model):
     Model class for the Schelling segregation model.
     """
 
-    def __init__(self, height=20, width=20, density=0.8, healing_rate=0.05, infection_rate=0.1):
+    def __init__(self, height=20, width=20, density=0.8, healing_rate=0.05, infection_rate=0.1, immunization_time=100):
         """ """
 
         self.height = height
@@ -64,7 +64,7 @@ class CovidSimple(Model):
         self.healing_rate = healing_rate
         self.infection_rate = infection_rate
         self.time = 0
-        self.immunization_time = 100
+        self.immunization_time = immunization_time
 
         self.schedule = RandomActivation(self)
         self.grid = SingleGrid(width, height, torus=True)
@@ -72,8 +72,7 @@ class CovidSimple(Model):
         self.infected = 0
         self.immune = 0
         self.datacollector = DataCollector(
-            {"infected": "infected"},  # Model-level count of happy agents
-        #    {"immune": "immune"},
+            {"infected": "infected", "immune": "immune"},  # Model-level count of happy agents
             # For testing purposes, agent's individual x and y
             {"x": lambda a: a.pos[0], "y": lambda a: a.pos[1]},
         )
@@ -97,8 +96,6 @@ class CovidSimple(Model):
         """
         Run one step of the model.
         """
-        self.infected = 0  # Reset counter of happy agents
-        self.immune = 0
         self.time += 1
         self.schedule.step()
         # collect data

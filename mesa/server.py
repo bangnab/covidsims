@@ -43,8 +43,7 @@ def covid_draw(agent):
 infected_element = InfectedElement()
 immune_element = ImmuneElement()
 canvas_element = CanvasGrid(covid_draw, 20, 20, 500, 500)
-infected_chart = ChartModule([{"Label": "infected", "Color": "Black"}])
-immune_chart = ChartModule([{"Label": "immune", "Color": "Blue"}])
+infected_chart = ChartModule([{"Label": "infected", "Color": "Black"}, {"Label": "immune", "Color": "Blue"}])
 
 # 4
 model_params = {
@@ -52,11 +51,12 @@ model_params = {
     "width": 20,
     "density": UserSettableParameter("slider", "Initial infection density", 0.01, 0.00, 1.0, 0.11),
     "infection_rate": UserSettableParameter("slider", "Infection rate", 0.1, 0.00, 1.0, 0.05),
-    "healing_rate": UserSettableParameter("slider", "Healing rate", 0.05, 0.00, 1.0, 0.01)
+    "healing_rate": UserSettableParameter("slider", "Healing rate", 0.05, 0.00, 1.0, 0.01),
+    "immunization_time": UserSettableParameter("slider", "Immunization time", 100, 1, 1000, 1)
 }
 
 # 5
 server = ModularServer(CovidSimple,
-                       [canvas_element, infected_element, infected_chart],
+                       [canvas_element, infected_element, immune_element, infected_chart],
                        "CovidSimple", model_params)
 
