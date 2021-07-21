@@ -22,31 +22,9 @@ class CovidAgent(Agent):
         self.infected = infected
         self.infection_time = 0
         self.immune = False
-        self.healing_time = 0
 
     def step(self):
-        infected_neighbors = 0
-        for neighbor in self.model.grid.neighbor_iter(self.pos):
-            if neighbor.infected:
-                infected_neighbors += 1
-
-        # Immunity disappears after some time
-        if self.immune and abs(self.infection_time - self.model.time) > self.model.immunization_time:
-            self.immune = False
-            self.model.immune -= 1
-
-        # Chance of healing
-        if self.infected and (self.model.random.random() < self.model.healing_rate):
-            self.infected = False
-            self.model.infected -= 1
-            self.immune = True
-            self.model.immune += 1
-
-        # If too many infected neighbors, gets infected
-        if not self.immune and not self.infected and infected_neighbors * self.model.infection_rate > self.model.random.random():
-            self.infected = True
-            self.model.infected += 1
-            self.infection_time = self.model.time
+        self.model.agent_step(self)
 
 
 class CovidSimple(Model):
@@ -71,7 +49,7 @@ class CovidSimple(Model):
         self.infected = 0
         self.immune = 0
         self.datacollector = DataCollector(
-            {"infected": "infected", "immune": "immune"},  # Model-level count of happy agents
+            {"infected": "infected", "immune": "immune"},  # Model-level count of agents
             # For testing purposes, agent's individual x and y
             {"x": lambda a: a.pos[0], "y": lambda a: a.pos[1]},
         )
@@ -85,11 +63,37 @@ class CovidSimple(Model):
             y = cell[2]
             already_infected = self.random.random() < self.density
             agent = CovidAgent((x, y), self, already_infected)
+            if already_infected:
+                self.infected += 1
             self.grid.position_agent(agent, (x, y))
             self.schedule.add(agent)
 
         self.running = True
         self.datacollector.collect(self)
+
+    def agent_step(self, agent):
+        infected_neighbors = 0
+        for neighbor in self.grid.neighbor_iter(agent.pos):
+            if neighbor.infected:
+                infected_neighbors += 1
+
+        # Immunity disappears after some time
+        if agent.immune and abs(agent.infection_time - self.time) > self.immunization_time:
+            agent.immune = False
+            self.immune -= 1
+
+        # Chance of healing
+        if agent.infected and (self.random.random() < self.healing_rate):
+            agent.infected = False
+            self.infected -= 1
+            agent.immune = True
+            self.immune += 1
+
+        # If too many infected neighbors, gets infected
+        if not agent.immune and not agent.infected and infected_neighbors * self.infection_rate > self.random.random():
+            agent.infected = True
+            self.infected += 1
+            agent.infection_time = self.time
 
     def step(self):
         """
