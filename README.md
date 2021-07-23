@@ -1,6 +1,6 @@
 # Covidsims
 
-The purpose of this repo is exploring virus propagation using different simulations based on the mesa framework.
+The purpose of this repo is exploring virus propagation using different simulations based on the [mesa framework](https://github.com/projectmesa/mesa/).
 
 ## Getting started
 
