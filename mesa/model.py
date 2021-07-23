@@ -90,10 +90,16 @@ class CovidSimple(Model):
             self.immune += 1
 
         # If too many infected neighbors, gets infected
-        if not agent.immune and not agent.infected and infected_neighbors * self.infection_rate > self.random.random():
+        if not agent.immune and not agent.infected and self.infected_by_neighbor(infected_neighbors):
             agent.infected = True
             self.infected += 1
             agent.infection_time = self.time
+
+    def infected_by_neighbor(self, infected_neighbors):
+        for i in range(infected_neighbors):
+            if self.infection_rate > self.random.random():
+                return True
+        return False
 
     def step(self):
         """
