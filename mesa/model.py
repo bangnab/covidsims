@@ -6,15 +6,14 @@ from mesa.datacollection import DataCollector
 
 class CovidAgent(Agent):
     """
-    Schelling segregation agent
+    Virus propagation agent
     """
 
     def __init__(self, pos, model, infected):
         """
-        Create a new Schelling agent.
+        Create a new Covid agent.
         Args:
-           unique_id: Unique identifier for the agent.
-           x, y: Agent initial location.
+           pos: Agent initial location.
            infected: Indicator for the agent's health
         """
         super().__init__(pos, model)
@@ -29,7 +28,7 @@ class CovidAgent(Agent):
 
 class CovidSimple(Model):
     """
-    Model class for the Schelling segregation model.
+    Model class for the virus propagation model.
     """
 
     def __init__(self, height=20, width=20, density=0.8, healing_rate=0.05, infection_rate=0.1, immunization_time=100):
