@@ -10,3 +10,7 @@ The purpose of this repo is exploring virus propagation using different simulati
 * A browser window should pop up and you can start experimenting!
 
 ![Example screenshot](images/screenshot.png "Example screenshot")
+
+## Batch run
+
+To gather stats about several runs and print them out you can use `mesa/run-batch.py`.
